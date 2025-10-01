@@ -1,4 +1,11 @@
-<?php header('Content-Type: text/html; charset=UTF-8'); ?>
+<?php
+header('Content-Type: text/html; charset=UTF-8');
+require_once __DIR__."/clases/Listar.php";
+
+
+$listarClass = new Listar();
+$empleadosList = $listarClass->listarEmpleados();
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -32,33 +39,32 @@
             </tr>
         </thead>
         <tbody>
+            <?php
+                if(!empty($empleadosList)){
+                    foreach($empleadosList as $item){
+            ?>
             <tr>
-                <td>Gladis Fernández</td>
-                <td>gfernandez@example.com</td>
-                <td>Femenino</td>
-                <td>Ventas</td>
-                <td>Sí</td>
+                <td><?= htmlspecialchars($emp['nombre']) ?></td>
+                <td><?= htmlspecialchars($emp['email']) ?></td>
+                <td><?= htmlspecialchars($emp['sexo']) ?></td>
+                <td><?= htmlspecialchars($emp['area_id']) ?></td>
+                <td><?= htmlspecialchars($emp['boletin']) ?></td>
                 <td><a href="#" class="text-primary"><i class="fa-solid fa-pen-to-square"></i></a></td>
                 <td><a href="#" class="text-danger"><i class="fa-solid fa-trash"></i></a></td>
             </tr>
+            <?php
+                    }
+                }else{
+            ?>
             <tr>
-                <td>Felipe Gómez</td>
-                <td>fgomez@example.com</td>
-                <td>Masculino</td>
-                <td>Calidad</td>
-                <td>No</td>
-                <td><a href="#" class="text-primary"><i class="fa-solid fa-pen-to-square"></i></a></td>
-                <td><a href="#" class="text-danger"><i class="fa-solid fa-trash"></i></a></td>
+                <td colspan="7" class="text-center text-muted">
+                    No hay registros disponibles
+                </td>
             </tr>
-            <tr>
-                <td>Adriana Loaiza</td>
-                <td>aloaiza@example.com</td>
-                <td>Femenino</td>
-                <td>Producción</td>
-                <td>Sí</td>
-                <td><a href="#" class="text-primary"><i class="fa-solid fa-pen-to-square"></i></a></td>
-                <td><a href="#" class="text-danger"><i class="fa-solid fa-trash"></i></a></td>
-            </tr>
+            <?php
+                    }
+            ?>
+            
         </tbody>
     </table>
 
