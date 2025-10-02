@@ -10,7 +10,8 @@ Este proyecto consiste en un CRUD completo desarrollado en PHP con conexión a b
 ## 🚀 Instalación
 
 1. Importa el archivo `Database.sql` ubicado en la raíz del proyecto dentro de tu gestor de base de datos MySQL.
-2. Inicia el servidor embebido de PHP con el siguiente comando:
+2. Ajuste las variables de coneixion a la base de datos ubicadas en el archivo config.php.
+3. Inicia el servidor embebido de PHP con el siguiente comando:
 
 ```bash
 php -S localhost:8000
