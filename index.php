@@ -1,9 +1,9 @@
 <?php
 header('Content-Type: text/html; charset=UTF-8');
-require_once __DIR__."/clases/Listar.php";
+require_once __DIR__."/clases/Controller.php";
 
 
-$listarClass = new Listar();
+$listarClass = new Controller();
 $empleadosList = $listarClass->listarEmpleados();
 ?>
 <!DOCTYPE html>
@@ -18,10 +18,21 @@ $empleadosList = $listarClass->listarEmpleados();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body class="container mt-4">
+    <?php
+        session_start();
+        if (isset($_SESSION['mensaje'])) {
+            echo "<div class='alert alert-{$_SESSION['tipo_mensaje']} alert-dismissible fade show' role='alert'>
+                    {$_SESSION['mensaje']}
+                    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
+            unset($_SESSION['mensaje']);
+            unset($_SESSION['tipo_mensaje']);
+        }
+    ?>
 
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h1 class="h3">Lista de empleados</h1>
-        <a class="btn btn-primary" href="crear.php">
+        <a class="btn btn-primary" href="formulario.php">
             <i class="fa-solid fa-user-plus"></i> Crear
         </a>
     </div>
@@ -44,14 +55,41 @@ $empleadosList = $listarClass->listarEmpleados();
                     foreach($empleadosList as $item){
             ?>
             <tr>
-                <td><?= htmlspecialchars($emp['nombre']) ?></td>
-                <td><?= htmlspecialchars($emp['email']) ?></td>
-                <td><?= htmlspecialchars($emp['sexo']) ?></td>
-                <td><?= htmlspecialchars($emp['area_id']) ?></td>
-                <td><?= htmlspecialchars($emp['boletin']) ?></td>
-                <td><a href="#" class="text-primary"><i class="fa-solid fa-pen-to-square"></i></a></td>
-                <td><a href="#" class="text-danger"><i class="fa-solid fa-trash"></i></a></td>
+                <td><?= htmlspecialchars($item['nombre']) ?></td>
+                <td><?= htmlspecialchars($item['email']) ?></td>
+                <td><?= htmlspecialchars($item['sexo']) ?></td>
+                <td><?= htmlspecialchars($item['area']) ?></td>
+                <td><?= htmlspecialchars($item['boletin']?"Si":"No") ?></td>
+                <td><a href="/formulario.php/<?= htmlspecialchars($item['id']) ?>" class="text-primary"><i class="fa-solid fa-pen-to-square"></i></a></td>
+                <td><button type="button"
+                        class="btn text-danger"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalEliminar">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </td>
             </tr>
+            <div class="modal fade" id="modalEliminar" tabindex="-1" aria-labelledby="modalEliminarLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title" id="modalEliminarLabel">¿Estás seguro?</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        Esta acción eliminará el registro permanentemente.
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <form id="formEliminar" method="POST" action="/clases/Controller.php">
+                        <input type="hidden" name="accion" value="eliminar">
+                        <input type="hidden" name="id" id="idEliminar">
+                        <button type="submit" class="btn btn-danger" name="accion" value="eliminar|<?= htmlspecialchars($item['id']) ?>">Eliminar</button>
+                        </form>
+                    </div>
+                    </div>
+                </div>
+            </div>
             <?php
                     }
                 }else{
@@ -67,6 +105,8 @@ $empleadosList = $listarClass->listarEmpleados();
             
         </tbody>
     </table>
+
+    
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
